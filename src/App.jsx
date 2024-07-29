@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import styles from './App.module.css';
+import { onMount } from "solid-js";
+import Corbado from "@corbado/web-js";
 
 function App() {
+  onMount(async () => {
+    try {
+      await Corbado.load({
+        projectId: import.meta.env.VITE_CORBADO_PROJECT_ID,
+      });
+
+      const authElement = document.getElementById("corbado-auth");
+      Corbado.mountAuthUI(authElement, {
+        onLoggedIn: () => {
+          window.location.href = "/";
+        },
+      });
+    } catch (error) {
+      console.error("Error initializing Corbado:", error);
+    }
+  });
+
   return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
-        </a>
-      </header>
+    <div>
+      
+      <div id="corbado-auth"></div>
     </div>
   );
 }
