@@ -27,19 +27,20 @@ function Profile() {
     }
   });
 
+  const handleLogout = async () => {
+    try {
+      await Corbado.logout();
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   createEffect(() => {
     if (!isLoading() && userId() && userEmail()) {
       const passkeyListElement = document.getElementById("passkey-list");
       if (passkeyListElement) {
         Corbado.mountPasskeyListUI(passkeyListElement);
-      }
-
-      const logoutButton = document.getElementById("logout-button");
-      if (logoutButton) {
-        logoutButton.addEventListener("click", async () => {
-          await Corbado.logout();
-          window.location.href = "/";
-        });
       }
     }
   });
@@ -53,7 +54,7 @@ function Profile() {
         <div>
           <p class={styles["profile-info"]}>User ID: {userId()}</p>
           <p class={styles["profile-info"]}>Email: {userEmail()}</p>
-          <button id="logout-button" class={styles["logout-button"]}>
+          <button id="logout-button" class={styles["logout-button"]} onClick={handleLogout}>
             Logout
           </button>
           <div id="passkey-list" class={styles["passkey-list"]}></div>
